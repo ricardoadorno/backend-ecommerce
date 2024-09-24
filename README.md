@@ -9,7 +9,7 @@
 [ ] - Swagger
 [ ] - JWT
 [ ] - Auth
-[ ] - Logger
+[X] - Logger
 [X] - Error Handler
 [X] - Validation
 [ ] - Cache

@@ -11,38 +11,40 @@ const productRepo = MainDataSource.getRepository(Product);
 const cartRepo = MainDataSource.getRepository(ShoppingCart);
 
 const getAll = async (req: Request, res: Response) => {
-    return res.json(await cartRepo.find({
-        relations: ['user', 'product']
-    })).status(200);
-}
+  return res
+    .json(
+      await cartRepo.find({
+        relations: ['user', 'product'],
+      }),
+    )
+    .status(200);
+};
 
 const create = async (req: Request, res: Response) => {
-    const { userId, productId, quantity } = req.body;
-    
-    const user = await userRepo.findOneBy({ id: +userId });
-    if (!user) {
-        throw Exceptions.notFound('User');
-    }
+  const { userId, productId, quantity } = req.body;
 
+  const user = await userRepo.findOneBy({ id: +userId });
+  if (!user) {
+    throw Exceptions.notFound('User');
+  }
 
-    const product = await productRepo.findOneBy({ id: String(productId) });
-    console.log(product);
-    
-    if (!product) {
-        throw Exceptions.notFound('Product');
-    }
+  const product = await productRepo.findOneBy({ id: String(productId) });
 
-    const cart = new ShoppingCart();
-    cart.user = user;
-    cart.product = product;
-    cart.quantity = quantity;
+  if (!product) {
+    throw Exceptions.notFound('Product');
+  }
 
-    await MainDataSource.getRepository(ShoppingCart).save(cart);
+  const cart = new ShoppingCart();
+  cart.user = user;
+  cart.product = product;
+  cart.quantity = quantity;
 
-    return res.status(201).send('Product added to cart');
-}
+  await MainDataSource.getRepository(ShoppingCart).save(cart);
+
+  return res.status(201).send('Product added to cart');
+};
 
 export default {
-    getAll,
-    create: asyncHandler(create)
+  getAll,
+  create: asyncHandler(create),
 };
